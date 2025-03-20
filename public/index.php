@@ -1,6 +1,16 @@
 <?php
-require '../helpers.php';
+require_once '../helpers.php';
 
-require basePath('views/home.view.php');
+require(basePath('Router.php'));
+require(basePath('routes.php'));
 
-echo 'Hello world';
+$router = new Router();
+initRoutes($router);
+
+$uri = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
+
+$router->route($uri, $method);
+
+inspect($uri);
+inspect($method);
