@@ -20,7 +20,7 @@ function basePath($path)
  */
 function loadView($name, $data = [])
 {
-  $viewPath = basePath('views/' . $name . '.view.php');
+  $viewPath = basePath('App/views/' . $name . '.view.php');
   if (file_exists($viewPath)) {
     extract($data);
     require $viewPath;
@@ -37,7 +37,7 @@ function loadView($name, $data = [])
  */
 function loadPartial($name)
 {
-  $partialFile =  basePath('views/partials/' . $name . '.php');
+  $partialFile =  basePath('App/views/partials/' . $name . '.php');
   if (file_exists($partialFile)) {
     require $partialFile;
   } else {
@@ -67,4 +67,9 @@ function inspectAndDie($value)
   echo '<pre>';
   die(var_dump($value));
   echo '</pre>';
+}
+
+function formatSalary($salary)
+{
+  return '$' . number_format(floatval($salary), 0, ',', ' ');
 }
