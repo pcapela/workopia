@@ -73,3 +73,25 @@ function formatSalary($salary)
 {
   return '$' . number_format(floatval($salary), 0, ',', ' ');
 }
+/**
+ * Snaitize string
+ *
+ * @param string $dirty
+ * @return string
+ */
+function sanitize($dirty)
+{
+  return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
+}
+
+/**
+ * Redirect and die...
+ *
+ * @param [type] $location
+ * @return void
+ */
+function redirect($location)
+{
+  header("Location: {$location}");
+  exit;
+}

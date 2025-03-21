@@ -4,6 +4,7 @@ namespace Framework;
 
 use App\controllers\ErrorController;
 
+
 class Router
 {
   protected $routes = [];
@@ -81,18 +82,6 @@ class Router
     $this->registerRoute('DELETE', $uri, $controller);
   }
 
-  /**
-   * Load error page
-   * @param int @errorcode
-   */
-  public function error($errorCode)
-  {
-    http_response_code($errorCode);
-    loadView('error/' . $errorCode);
-    exit;
-  }
-
-
   // /**
   //  * Route the request
   //  * 
@@ -116,19 +105,43 @@ class Router
    * @param string $uri
    * @param string $method
    */
-  public function route($uri, $method)
+  public function route($uri)
   {
+    $requestMethod = $_SERVER['REQUEST_METHOD'];
+
     foreach ($this->routes as $route) {
-      if ($route['uri'] === $uri && $route['method'] === $method) {
 
-        // Get the controller class and method (not the http method...)
-        $controller = 'App\\Controllers\\' . $route['controller'];
-        $controllerMethod = $route['controllerMethod'];
+      // Split the arg and route uris in segments
+      $uriSegments = explode('/', trim($uri));
+      $routeSegments = explode('/', trim($route['uri']));
 
-        // Instantiate the controller
-        $controllerInstance = new $controller();
-        $controllerInstance->$controllerMethod();
-        return;
+      // Check if nummber if segs matches
+      if (count($uriSegments) === count($routeSegments) && strtoupper($route['method']) === $requestMethod) {
+        $params = [];
+        $match = true;
+
+        for ($i = 0; $i < count($uriSegments); $i++) {
+          if ($routeSegments[$i] !== $uriSegments[$i] && !preg_match('/\{(.+?)\}/', $routeSegments[$i])) {
+            $match = false;
+            break;
+          }
+
+          // If we've a match for params let's get them...
+          if (preg_match('/\{(.+?)\}/', $routeSegments[$i], $matches)) {
+            $params[$matches[1]] = $uriSegments[$i];
+          }
+        }
+
+        if ($match) {
+          // Get the controller class and method (not the http method...)
+          $controller = 'App\\Controllers\\' . $route['controller'];
+          $controllerMethod = $route['controllerMethod'];
+
+          // Instantiate the controller
+          $controllerInstance = new $controller();
+          $controllerInstance->$controllerMethod($params);
+          return;
+        }
       }
     }
     ErrorController::notFound("Can't find that sh*t!");

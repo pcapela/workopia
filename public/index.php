@@ -18,9 +18,6 @@ use Framework\Router;
 
 require(basePath('routes.php'));
 
-// $config = require(basePath('config/db.php'));
-// $db = new Database($config);
-
 // Create Router and init routes
 $router = new Router();
 initRoutes($router);
@@ -28,10 +25,7 @@ initRoutes($router);
 // Get HTTP URI and METHOD
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-$method = $_SERVER['REQUEST_METHOD'];
+
 
 // Handle HTTP Command...
-$router->route($uri, $method);
-
-// inspect($uri);
-// inspect($method);
+$router->route($uri);

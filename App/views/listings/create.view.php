@@ -3,6 +3,8 @@
 
 <?php loadPartial('topbanner'); ?>
 
+<?php $listing = isset($listing) ? $listing : []; ?>
+
 <!-- Post a Job Form Box -->
 <section class="flex justify-center items-center mt-20">
   <div class="bg-white p-8 rounded-lg shadow-md w-full md:w-600 mx-6">
@@ -11,28 +13,35 @@
         <div class="message bg-green-100 p-3 my-3">
           This is a success message.
         </div> -->
-    <form method="POST">
+    <form method="POST" action="/listings">
       <h2 class="text-2xl font-bold mb-6 text-center text-gray-500">
         Job Info
       </h2>
+      <?php if (isset($errors)) : ?>
+        <?php foreach ($errors as $error) : ?>
+          <div class="message bg-red-100 my-3"> <?= $error ?></div>
+        <?php endforeach ?>
+      <?php endif ?>
       <div class="mb-4">
         <input
           type="text"
           name="title"
           placeholder="Job Title"
+          value="<?= !empty($listing['title']  ?? '') ? html_entity_decode($listing['title']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
         <textarea
           name="description"
           placeholder="Job Description"
-          class="w-full px-4 py-2 border rounded focus:outline-none"></textarea>
+          class="w-full px-4 py-2 border rounded focus:outline-none"><?= !empty($listing['description']  ?? '') ? html_entity_decode($listing['description']) : '' ?></textarea>
       </div>
       <div class="mb-4">
         <input
           type="text"
           name="salary"
           placeholder="Annual Salary"
+          value="<?= !empty($listing['salary']  ?? '') ? html_entity_decode($listing['salary']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -40,6 +49,7 @@
           type="text"
           name="requirements"
           placeholder="Requirements"
+          value="<?= !empty($listing['requirements']  ?? '') ? html_entity_decode($listing['requirements']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -47,6 +57,7 @@
           type="text"
           name="benefits"
           placeholder="Benefits"
+          value="<?= !empty($listing['benefits']  ?? '') ? html_entity_decode($listing['benefits']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <h2 class="text-2xl font-bold mb-6 text-center text-gray-500">
@@ -57,6 +68,7 @@
           type="text"
           name="company"
           placeholder="Company Name"
+          value="<?= !empty($listing['company']  ?? '') ? html_entity_decode($listing['company']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -64,6 +76,7 @@
           type="text"
           name="address"
           placeholder="Address"
+          value="<?= !empty($listing['address']  ?? '') ? html_entity_decode($listing['address']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -71,6 +84,7 @@
           type="text"
           name="city"
           placeholder="City"
+          value="<?= !empty($listing['city']  ?? '') ? html_entity_decode($listing['city']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -78,6 +92,7 @@
           type="text"
           name="state"
           placeholder="State"
+          value="<?= !empty($listing['state']  ?? '') ? html_entity_decode($listing['state']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -85,6 +100,7 @@
           type="text"
           name="phone"
           placeholder="Phone"
+          value="<?= !empty($listing['phone']  ?? '') ? html_entity_decode($listing['phone']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <div class="mb-4">
@@ -92,6 +108,7 @@
           type="email"
           name="email"
           placeholder="Email Address For Applications"
+          value="<?= !empty($listing['email']  ?? '') ? html_entity_decode($listing['email']) : '' ?>"
           class="w-full px-4 py-2 border rounded focus:outline-none" />
       </div>
       <button
