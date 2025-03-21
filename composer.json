@@ -1,0 +1,16 @@
+{
+  "name" : "pcapela/workopia",
+  "description": "Sampple PHP app",
+  "authors": [
+    {
+    "name" : "pcapela",
+    "email": "pedro.m.capela@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Framework\\" : "Framework/",
+      "App\\": "App/"
+    }
+  }
+}

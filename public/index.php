@@ -1,8 +1,21 @@
 <?php
 require_once '../helpers.php';
 
-require(basePath('Framework/Router.php'));
-require(basePath('Framework/Database.php'));
+require __DIR__ . '/../vendor/autoload.php';
+
+use Framework\Router;
+
+// This will custom autoload the class php on the first 
+// reference of the class
+// replaced by "psr-4 autoload" see composer.json
+// 
+// spl_autoload_register(function ($class) {
+//   $path = basePath('Framework/' . $class . '.php');
+//   if (file_exists($path)) {
+//     require $path;
+//   }
+// });
+
 require(basePath('routes.php'));
 
 // $config = require(basePath('config/db.php'));
