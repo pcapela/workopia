@@ -5,8 +5,13 @@
       <a href="/">Workopia</a>
     </h1>
     <nav class="space-x-4">
-      <a href="login.html" class="text-white hover:underline">Login</a>
-      <a href="register.html" class="text-white hover:underline">Register</a>
+      <?php if (isset($_SESSION['loggedin_user'])) : ?>
+        <a href="/auth/logout" class="text-white hover:underline">Logout (<?= $_SESSION['loggedin_user_email'] ?>) </a>
+      <?php else : ?>
+        <a href="/auth/login" class="text-white hover:underline">Login</a>
+        <a href="/auth/register" class="text-white hover:underline">Register</a>
+      <?php endif; ?>
+
       <a
         href="/listings/create"
         class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded hover:shadow-md transition duration-300"><i class="fa fa-edit"></i> Post a Job</a>

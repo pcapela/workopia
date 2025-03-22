@@ -109,6 +109,11 @@ class Router
   {
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
+    // Check for _method input
+    if ($requestMethod === 'POST' && isset($_POST['_method'])) {
+      $requestMethod = strtoupper($_POST['_method']);
+    }
+
     foreach ($this->routes as $route) {
 
       // Split the arg and route uris in segments
