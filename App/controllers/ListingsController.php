@@ -112,10 +112,16 @@ class ListingsController
     $id = $params['id'];
     $listing = $this->db->query('SELECT * FROM listings WHERE id = :id;', ['id' => $id])->fetch();
 
+    $listing = $this->db->query('SELECT * FROM listings WHERE id = :id;', ['id' => $id])->fetch();
+
     // We only can delete what exists...
     if (!$listing) {
       ErrorController::notFound('Listing not found!');
     } else {
+      if ($listing->user_id !== $_SESSION['loggedin_user']) {
+        ErrorController::unautorizedError('Only the creator can delete');
+        return;
+      }
       $this->db->query('DELETE FROM listings WHERE id = :id;', ['id' => $id]);
 
       $_SESSION['success_message'] = 'Listing deleted successufully';
@@ -147,6 +153,16 @@ class ListingsController
   public function update($params)
   {
     $id = $params['id'];
+
+    $listing = $this->db->query('SELECT * FROM listings WHERE id = :id;', ['id' => $id])->fetch();
+    if (!$listing) {
+      ErrorController::notFound('Listing not found!');
+    }
+    if ($listing->user_id !== $_SESSION['loggedin_user']) {
+      ErrorController::unautorizedError('Yu\'re not authorized to modify this record');
+      return;
+    }
+
     $alowedFields = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'tags', 'city', 'state', 'phone', 'email'];
 
     $newListingData = array_intersect_key($_POST, array_flip($alowedFields));

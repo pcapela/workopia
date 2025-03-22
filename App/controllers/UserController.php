@@ -113,63 +113,64 @@ class UserController
 
     $alowedFields = ['name', 'email', 'city', 'state', 'email', 'password', 'password_confirmation'];
 
-    $newUsergData = array_intersect_key($_POST, array_flip($alowedFields));
+    $newUserData = array_intersect_key($_POST, array_flip($alowedFields));
 
-    $newUsergData = array_map('sanitize', $newUsergData);
+    $newUserData = array_map('sanitize', $newUserData);
 
     $requiredFields = ['name', 'password', 'password_confirmation', 'email'];
 
     $errors = [];
     foreach ($requiredFields as $field) {
-      if (empty($newUsergData[$field]) || !Validation::string($newUsergData[$field])) {
+      if (empty($newUserData[$field]) || !Validation::string($newUserData[$field])) {
         $errors[$field] = ucfirst($field) . ' is required.';
       }
     }
     // Specific checks
-    if (!empty($newUsergData['password']) && $newUsergData['password'] !== $newUsergData['password_confirmation']) {
+    if (!empty($newUsergData['password']) && $newUserData['password'] !== $newUserData['password_confirmation']) {
       $errors['password'] = 'Passwords must match.';
     }
 
-    if (!empty($newUsergData['email']) && !Validation::email($newUsergData['email'])) {
-      $errors['email'] = 'e-amil format is not valid.';
+    if (!empty($newUsergData['email']) && !Validation::email($newUserData['email'])) {
+      $errors['email'] = 'e-mail format is not valid.';
     }
 
-    $query = 'SELECT email FROM users WHERE email = :name;';
-    if (!empty($newUsergData['email']) && $this->db->query($query, ['email' => $newUsergData['email']])->fetch() !== false) {
-      $errors['name'] = 'User name already in use.';
+    $query = 'SELECT email FROM users WHERE email = :email;';
+    if (!empty($newUserData['email']) && $this->db->query($query, ['email' => $newUserData['email']])->fetch() !== false) {
+      $errors['email'] = 'User name (e-mail) already in use.';
     }
 
     if (!empty($errors)) {
       // Reload view with errors
       loadView('users/create', [
-        'user' => $newUsergData,
+        'user' => $newUserData,
         'errors' => $errors
       ]);
     } else {
-      unset($newUsergData['password_confirmation']); // Not a table column
+      unset($newUserData['password_confirmation']); // Not a db table column
       $fields = [];
       $values = [];
-      foreach ($newUsergData as $field => $data) {
+      foreach ($newUserData as $field => $data) {
         $fields[] = $field;
         $values[] = ':' . $field;
         if ($data === '') {
-          $newUsergData[$field] = null;
+          $newUserData[$field] = null;
         }
       }
 
       $fields = implode(',', $fields);
       $values = implode(',', $values);
 
-      $query = "INSERT INTO users ({$fields}) VALUES ({$values});";
+
       try {
-        $this->db->query($query, $newUsergData);
+        $query = "INSERT INTO users ({$fields}) VALUES ({$values});";
+        $this->db->query($query, $newUserData);
         redirect('/');
       } catch (Exception $e) {
         inspectAndDie($e);
         $errors['insert'] = $e->getMessage();
-        $newUsergData['password_confirmation'] = $newUsergData['password'];
+        $newUserData['password_confirmation'] = $newUserData['password'];
         loadView('users/create', [
-          'user' => $newUsergData,
+          'user' => $newUserData,
           'errors' => $errors
         ]);
       }
